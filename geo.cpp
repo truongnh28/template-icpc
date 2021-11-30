@@ -226,7 +226,9 @@ bool inPolygon(vector<pt> p, pt a, bool strict = true) {
     }
     return numCrossings & 1; // inside if odd number of crossings
 }
-
+void solve(){
+    
+}
 int main (){
 	#ifndef ONLINE_JUDGE
     freopen("input.txt", "r", stdin);
