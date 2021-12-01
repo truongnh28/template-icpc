@@ -32,9 +32,9 @@ public:
 
     int query(int x, int y){
         int sum = 0;
-        for(int x_ = x; x_ > 0; x_ = x_ - LSB(x_)){
-            for(int y_ = y; y_ > 0; y_ = y_ - LSB(y_)){
-                sum = sum + ft[x_][y_];
+        for(int i = x; i > 0; i = i - LSB(i)){
+            for(int j = y; j > 0; j = j - LSB(j)){
+                sum = sum + ft[i][j];
             }
         }
         return sum;
@@ -47,9 +47,9 @@ public:
     void update(int x, int y, int value){
         // also update matrix[x][y] if needed.
 
-        for(int x_ = x; x_ < ft.size(); x_ = x_ + LSB(x_)){
-            for(int y_ = y; y_ < ft[0].size(); y_ = y_ + LSB(y_)){
-                ft[x_][y_] += value;
+        for(int i = x; i < ft.size(); i = i + LSB(i)){
+            for(int j = y; j < ft[0].size(); j = j + LSB(j)){
+                ft[i][j] += value;
             }
         }
     }
