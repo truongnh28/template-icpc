@@ -18,41 +18,46 @@ using namespace std;
 const long long MOD = 1000000007;
 const long double PI = 3.141592653589793238462643383279502884;
 const long long INF = 1e18;
+const long long MAXX = 1e7;
 
 class Fenwick{
     public:
-    int n;
-    vector<int> fw1, fw2;
-    Fenwick(int n){
+    ll n;
+    vector<ll> fw1, fw2;
+    Fenwick(ll n){
         this->n = n;
         fw1.assign(n + 1, 0);
         fw2.assign(n + 1, 0);
     }
-    void updatePoint(vector<int> &fw, int u, int v){
-        int idx = u;
-        while (idx <= n){
+    void updatePoint(vector<ll>& fw, ll u, ll v) {
+        ll idx = u;
+        while (idx <= n) {
             fw[idx] += v;
-            idx += idx & (-idx);
+            idx += (idx & (-idx));
         }
     }
-    void updateRange(int l, int r, int v){
-        updatePoint(fw1, l, (r - l + 1) * v);
-        updatePoint(fw1, r + 1, (n - r) * (-v));
+
+    void updateRange(ll l, ll r, ll v) {
+        updatePoint(fw1, l, (n - l + 1) * v);
+        updatePoint(fw1, r + 1, -(n - r) * v);
         updatePoint(fw2, l, v);
-        updatePoint(fw2, r + 1, v);
+        updatePoint(fw2, r + 1, -v);
     }
-    int getSum(vector<int> &fw, int index){
-        int idx = index, ans = 0;
-        while(idx > 0){
+
+    ll getSum(vector<ll>& fw, ll u) {
+        ll idx = u, ans = 0;
+        while (idx > 0) {
             ans += fw[idx];
-            idx -= idx & (-idx);
+            idx -= (idx & (-idx));
         }
         return ans;
     }
-    int prefixSum(int u){
+
+    ll prefixSum(ll u) {
         return getSum(fw1, u) - getSum(fw2, u) * (n - u);
     }
-    int rangeSum(int l, int r){
+
+    ll rangeSum(ll l, ll r) {
         return prefixSum(r) - prefixSum(l - 1);
     }
     void check(){
@@ -64,18 +69,15 @@ class Fenwick{
 };
 
 void solve(){
-    int n;
-    cin >> n;
-    vector<int> a(n);
-    Fenwick fw(n);
-    for(int i = 0; i < n; i++){
+    ll n, m;
+    cin >> n >> m;
+    vector<ll> a(n + 1);
+    Fenwick fw(100001);
+    for(ll i = 1; i <= n; i++){
         cin >> a[i];
+        fw.updatePoint(fw.fw1, i, a[i]);
     } 
-    for(int i = 0; i < n; i++){
-        fw.updatePoint(fw.fw1, i + 1, a[i]);
-    }
-    cout << fw.rangeSum(3, 4);
-    // for(auto it:fw.fw1) cout << it << ' ';
+
 }
 int main (){
 	#ifndef ONLINE_JUDGE
