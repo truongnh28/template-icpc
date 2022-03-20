@@ -4,23 +4,23 @@ typedef long long ll;
 typedef unsigned long long ull;
 typedef long double ld;
 
-// Tính gcd (ước chung lớn nhất)
+// calculate the gcd
 ll gcd(ll a, ll b) { return b ? gcd(b, a % b) : a; }
 
-// Tính lcm (bội chung nhỏ nhất)
+// calculate the lcm
 ll lcm(ll a, ll b) { return a / gcd(a, b) * b; }
 
-// tính lg2(a)
+// calculate lg2(a)
 int lg2(ll a) {
   return 63 - __builtin_clzll(a);
 }
 
-// tính số lượng bit 1
+// count the number of 1 bits
 int bitcount(ll a) {
   return __builtin_popcountll(a);
 }
 
-// tính ceil(a / b)
+// calculate ceil(a / b)
 ll ceildiv(ll a, ll b) {
   if (b < 0) return ceildiv(-a, -b);
   if (a >= 0) return  a / b;
@@ -57,7 +57,7 @@ ll modLog(ll a, ll b, ll m) {
     A[e * b % m] = j++;
   if (e == b % m) return j;
   if (__gcd(m, e) == __gcd(m, b)) 
-    rep(i,2,n+2) if (A.count(e = e * f % m))
+    for (int i = 2; i < n + 2; ++i) if (A.count(e = e * f % m))
       return n * i - A[e];
   return -1;
 }
@@ -108,7 +108,6 @@ void calc_range_modinv(int n, int mod, ll ret[]) {
   ret[1] = 1LL;
   for (int i = 2; i <= n; ++i)
     ret[i] = (ll)(mod - mod / i) * ret[mod % i] % mod;
-  return ret;
 }
 
 // Find fibonacci in range [0, n]
@@ -120,20 +119,20 @@ vector<ll> fibonacci(int n) {
 }
 
 // Find n-th fibonnacci in O(logN), call fib(n)
-void multiply(int F[2][2], int M[2][2]);
-void power(int F[2][2], int n);
-int fib(int n) {
-  int F[2][2] = {{1, 1}, {1, 0}};
+void multiply(ll F[2][2], ll M[2][2]);
+void power(ll F[2][2], ll n);
+ll fib(int n) {
+  ll F[2][2] = {{1LL, 1LL}, {1LL, 0LL}};
   if (n == 0)
     return 0;
   power(F, n - 1);
 
   return F[0][0];
 }
-void power(int F[2][2], int n) {
+void power(ll F[2][2], int n) {
   if(n == 0 || n == 1)
     return;
-  int M[2][2] = {{1, 1}, {1, 0}};
+  ll M[2][2] = {{1LL, 1LL}, {1LL, 0LL}};
    
   power(F, n / 2);
   multiply(F, F);
@@ -141,7 +140,7 @@ void power(int F[2][2], int n) {
   if (n % 2 != 0)
     multiply(F, M);
 }
-void multiply(int F[2][2], int M[2][2]) {
+void multiply(ll F[2][2], ll M[2][2]) {
   int x = F[0][0] * M[0][0] + F[0][1] * M[1][0];
   int y = F[0][0] * M[0][1] + F[0][1] * M[1][1];
   int z = F[1][0] * M[0][0] + F[1][1] * M[1][0];
@@ -155,11 +154,11 @@ void multiply(int F[2][2], int M[2][2]) {
 
 // Find nth-fibonacci in O(logN) 
 map<int, ll> f;
-int fib(int n) {
+ll fib(int n) {
   if (n == 0)
     return 0;
   if (n == 1 || n == 2)
-    return (f[n] = 1);
+    return (f[n] = 1LL);
   if (f[n])
     return f[n];
   int k = (n & 1)? (n+1)/2 : n/2;
@@ -167,7 +166,8 @@ int fib(int n) {
          : (2*fib(k-1) + fib(k))*fib(k);
   return f[n];
 }
-// tính số catalan
+
+// calculate catalan number
 vector<ll> catalan(int n) {
   vector<ll>cat(n);
   cat[0] = 1;
@@ -231,7 +231,7 @@ void shift_solution(ll &x, ll &y, ll a, ll b, ll cnt) {
 }
 // Find the number of solution in range [minx, maxx], [miny, maxy]
 int find_all_solutions(ll a, ll b, ll c, ll minx, ll maxx, ll miny, ll maxy) {
-  int x, y, g;
+  ll x, y, g;
   if (!find_any_solution(a, b, c, x, y, g))
     return 0;
   a /= g;
@@ -323,6 +323,22 @@ vector<int> eratosthenes() {
   return pr;
 }
 
+// linear sieve, other version of sieve of eratosthenes in O(n)
+vector<int> linear_sieve(int n) {
+  vector<int>pr;
+  vector<int>lp(n + 1, 0);
+  for (int i = 2; i <= n; ++i) {
+    if (lp[i] == 0) {
+      lp[i] = i;
+      pr.push_back(i);
+    }
+    for (int j = 0; j < (int)pr.size() && pr[j] <= lp[i] && i * pr[j] <= n; ++j) {
+      lp[i * pr[j]] = pr[j];
+    }
+  }
+  return pr;
+}
+
 // Count the number of factor in range 1 ~ n
 // If you want to calculate the sum of factor change ++ to += i
 // O(n * logn)
@@ -399,7 +415,7 @@ vector<ll> getFactorization(int x) {
 // With larger number, use Pollard Rho
 vector<int> prime_factor(int n) {
   vector<int>factors;
-  vector<ll>primes = sieve(n);
+  vector<int>primes = eratosthenesSieve(n);
   int ind = 0, pf = primes[0];
   while(pf * pf <= n) {
     while(n % pf == 0) n /= pf, factors.push_back(pf);
@@ -427,6 +443,6 @@ vector<ull> factor(ull n) {
   if (isPrime(n)) return {n};
   ull x = pollard(n);
   auto l = factor(x), r = factor(n / x);
-  l.insert(l.end(), all(r));
+  l.insert(l.end(), r.begin(), r.end());
   return l;
 }
